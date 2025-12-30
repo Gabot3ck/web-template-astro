@@ -1,0 +1,77 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  robots?: string; //  "index,follow" | "noindex,nofollow"
+  jsonLd?: Record<string, any> | null; // structured data opcional por página
+}
+
+const {
+  title, 
+  description, 
+  image, 
+  robots,
+  jsonLd= null
+} = Astro.props;
+
+const url = Astro.url?.href ?? '';
+const siteName = 'Web template Astro';
+const ogImage = image ?? '/default-og.jpg';
+---
+
+<html lang="es-CL">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google tag (gtag.js) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-7NQ10T06VY"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7NQ10T06VY');
+    </script> -->
+    <title>{title}</title>
+
+    <meta name="description" content={description}>
+    <meta name="robots" content={robots} />
+
+    <link rel="canonical" href={url} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="es_CL" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+
+    <!-- Favicon & CSS-->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+
+    {jsonLd && (
+      <script type="application/ld+json">
+        {JSON.stringify(jsonLd)}
+      </script>
+    )}
+  </head>
+
+  <body>
+    <slot/>
+  </body>
+</html>
+

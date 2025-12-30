@@ -1,16 +1,27 @@
 ---
-import '../styles/global.css'
+import MainLayout from '../layouts/MainLayaout.astro';
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Comercial Scanavini Ltda.",
+  "url": "https://www.scanavini.com",
+  "logo": "https://www.scanavini.com/iso_scanavini.svg",
+  "sameAs": [
+    "https://www.facebook.com/scanaviniCL/", 
+    "https://www.instagram.com/scanavini_cerraduras/",
+		"https://www.linkedin.com/company/comercial-scanavini-limitada/about/",
+		"https://www.youtube.com/@ScanaviniCerraduras"
+  ]
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1 class="text-blue-500" >Astro</h1>
-	</body>
-</html>
+<MainLayout
+  title="Title"
+  description="Description"
+	image='/iso_scanavini.svg'
+	robots="index,follow"
+	jsonLd={ jsonLd }
+>
+  <h1 class="text-blue-500" >Hello World</h1>
+</MainLayout>
