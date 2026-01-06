@@ -1,5 +1,7 @@
 ---
 import MainLayout from '../layouts/MainLayaout.astro';
+import ProductCard from '../components/products/ProductCard.astro';
+import type { PokemonListResponse } from 'src/interfaces/pokemon-list.response';
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -14,6 +16,9 @@ const jsonLd = {
 		"https://www.youtube.com/@ScanaviniCerraduras"
   ]
 };
+
+const resp = await fetch('https://pokeapi.co/api/v2/pokemon');
+const data = (await resp.json()) as PokemonListResponse;
 ---
 
 <MainLayout
@@ -23,5 +28,14 @@ const jsonLd = {
 	robots="index,follow"
 	jsonLd={ jsonLd }
 >
-  <h1 class="text-blue-500" >Hello World</h1>
+  
+
+  <h1>Listado</h1>
+
+  <section
+    aria-label="Listado de Pokémons"
+    class="grid grid-cols-1 sm:grid-cols-4 md:grid-cols-5 gap-4 mt-5"
+  >
+    {data.results.map(({ name, url }) => <ProductCard name={name} url={url} />)}
+  </section>
 </MainLayout>
