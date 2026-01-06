@@ -1,4 +1,7 @@
 ---
+import { ClientRouter } from 'astro:transitions';
+
+import Navbar from '@components/shared/Navbar.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -37,6 +40,7 @@ const ogImage = image ?? '/default-og.jpg';
       gtag('config', 'G-7NQ10T06VY');
     </script> -->
     <title>{title}</title>
+    <ClientRouter />
 
     <meta name="description" content={description}>
     <meta name="robots" content={robots} />
@@ -71,6 +75,7 @@ const ogImage = image ?? '/default-og.jpg';
   </head>
 
   <body>
+    <Navbar />
     <slot/>
   </body>
 </html>
