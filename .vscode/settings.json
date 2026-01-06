@@ -1,0 +1,15 @@
+{
+  "python-envs.pythonProjects": [
+  ],
+  "quicktype.justTypes": true,
+  "thunder-client.defaultHeaders": [
+    {
+      "name": "Accept",
+      "value": "*/*"
+    },
+    {
+      "name": "User-Agent",
+      "value": "Thunder Client (https://www.thunderclient.com)"
+    }
+  ]
+}
