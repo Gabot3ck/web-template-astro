@@ -1,0 +1,20 @@
+---
+// Button.astro
+interface Props {
+  id?: string;
+  class?: string;
+  'data-id'?: string;
+  'data-name'?: string;
+}
+
+const { id, class: className, ...attrs } = Astro.props;
+---
+
+<button 
+  id={id}
+  class={className}
+  {...attrs}
+>
+  <!-- TODOS los elementos entre <Button> y </Button> van AQUÍ como hijos reales -->
+  <slot />
+</button>
