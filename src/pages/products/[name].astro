@@ -5,58 +5,115 @@ import type { PokemonListResponse } from "../../interfaces/pokemon-list.response
 
 import MainLayaout from "../../layouts/MainLayaout.astro";
 import ProductCard from "@components/products/ProductCard.astro";
+import HeartIcon from "public/icons/HeartIcon.astro";
 
+export const getStaticPaths = (async () => {
+  const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
 
+  const { results } = (await resp.json()) as PokemonListResponse;
 
-export const getStaticPaths = ( async () => {
-
-  const resp = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
-
-  const { results } = await resp.json() as PokemonListResponse;
-
-  return results.map( ({ name, url }) => (
-    {
-      params: { name: name },
-      props: { name: name, url: url }
-    })
-  )
-
+  return results.map(({ name, url }) => ({
+    params: { name: name },
+    props: { name: name, url: url },
+  }));
 }) satisfies GetStaticPaths;
 
 const { name } = Astro.params;
 const { url } = Astro.props;
 
-const id = url.split('/').at(-2);
-const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`
+const id = url.split("/").at(-2);
+const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`;
 ---
 
-
-<MainLayaout
-  title="";
-  description="";
->
+<MainLayaout title={`Pokemón - #${id} ${name}`} description="">
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
-    <div>
-      <a href="/">Regresar</a>
-      <h1 class="capitalize text-5xl"> { name } </h1>
+    <div class="flex flex-row">
+      <div>
+        <button onclick="history.back()" class="text-blue-500">Regresar</button>
+        <h1 class="capitalize text-5xl">{name}</h1>
+      </div>
+
+
+      <button id="btn-favorite" class="ml-4" data-name={name} data-id={id}>
+        <HeartIcon data-outline />
+        <HeartIcon data-full className="text-red-600 hidden" />
+      </button>
     </div>
 
-    <ProductCard
-      url={ url }
-      name={ name }
-      isBig
-    />
+    <ProductCard url={url} name={name} isBig />
 
     <audio controls class="mt-5">
-      <source src={audioSrc} type="audio/ogg">
+      <source src={audioSrc} type="audio/ogg" />
       Tu navegador no soporta audio
     </audio>
   </section>
-
 </MainLayaout>
 
+<script>
+  interface FavoritePokemon {
+    name: string;
+    id: number;
+  }
+
+  let favoritePokemons: FavoritePokemon[] = JSON.parse(
+    localStorage.getItem('favorites') ?? '[]'
+  )
+
+  const handlePageLoad = () => {
+    const btnFavorite = document.getElementById(
+      "btn-favorite"
+    ) as HTMLButtonElement;
+
+    if(!btnFavorite) return;
+
+    const name = btnFavorite.dataset.name ?? '';
+    const id = btnFavorite.dataset.id ?? '';
+
+    const heartOutline = btnFavorite.querySelector("[data-outline]") as HTMLElement;
+    const heartFull = btnFavorite.querySelector("[data-full]") as HTMLElement;
+    const isFavorite = favoritePokemons.some( fav => fav.name == name );
+
+
+    if(isFavorite){
+      heartFull.classList.remove('hidden');
+      heartFull.classList.add('visible');
+      heartOutline.classList.add('hidden');
+    }
+
+    const toggleFavorite = () => {
+      const isFavorite = favoritePokemons.some( fav => fav.name == name );
+
+      if (isFavorite) {
+        favoritePokemons = favoritePokemons.filter( fav => fav.name != name );
+      } else {
+        favoritePokemons.push({
+          id: +id,
+          name: name,
+        })
+      }
+
+      localStorage.setItem('favorites', JSON.stringify(favoritePokemons));
+    }
+
+
+    btnFavorite.addEventListener("click", () => {
+      heartOutline.classList.toggle('hidden');
+      heartFull.classList.toggle('hidden');
+
+      toggleFavorite();
+    });
+  }
+
+  document.addEventListener("astro:page-load", handlePageLoad );
+</script>
+
 <style>
-  a{
-    @apply hover:underline
+  @reference "../../styles/global.css";
+  a {
+    @apply hover:underline;
+  }
+
+  #btn-favorite {
+    @apply hover:animate-pulse;
   }
 </style>
