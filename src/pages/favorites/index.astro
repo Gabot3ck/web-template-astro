@@ -1,4 +1,5 @@
 ---
+import { FavoritePokemons } from "@components/products/FavoritePokemons";
 import MainLayaout from "../../layouts/MainLayaout.astro";
 
 
@@ -14,5 +15,7 @@ const jsonLd = { };
 	jsonLd={ jsonLd }
 >
 <h1>FAVORITOS</h1>
+
+<FavoritePokemons client:only="react" />
 
 </MainLayaout>

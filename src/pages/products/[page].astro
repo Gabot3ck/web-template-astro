@@ -25,7 +25,7 @@ export const getStaticPaths = ( async ( { paginate } ) => {
   const {results} = (await resp.json()) as PokemonListResponse;
 
 
-  return paginate(results, { pageSize:10 });
+  return paginate(results, { pageSize:20 });
 }) satisfies GetStaticPaths;
 
 const { page } = Astro.props;
